@@ -1,0 +1,241 @@
+Queries practiced in https://onecompiler.com/sqlserver
+
+--TABLE 1: MOVIES
+-- create
+CREATE TABLE MOVIES (
+  movieID int primary key,
+  name varchar(100),
+  poster text,
+  trailer text,
+  genre text,
+  reviews_id text,
+  artists_id text
+);
+
+-- insert
+INSERT INTO MOVIES(movieID,name,poster,trailer,genre,reviews_id,artists_id) VALUES (0001, "Ponniyin Selvan 1",
+"images.ottplay.com/images/ponniyin-selvan-940.jpg?impolicy=ottplay-20210210&width=600",
+"www.youtube.com/watch?v=D4qAQYlgZQs",
+"Historical, fantasy, drama, Chola Kingdom, action, musical",
+"1,2,3",
+"1,2,3,4,5,6,7");
+INSERT INTO MOVIES(movieID,name,poster,trailer,genre,reviews_id,artists_id) VALUES (0002, "Ponniyin Selvan 2",
+"static.toiimg.com/thumb/msid-99807846,width-1280,resizemode-4/99807846.jpg",
+"www.youtube.com/watch?v=EnhS3matIoU",
+"Historical, fantasy, drama, Chola Kingdom, action, musical",
+"4,5,6,7",
+"1,2,3,4,5,6,7");
+INSERT INTO MOVIES(movieID,name,poster,trailer,genre,reviews_id,artists_id) VALUES (0003, "Into the Spider-Verse",
+"m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_.jpg",
+"www.youtube.com/watch?v=g4Hbz2jLxvQ",
+"Animation, fantasy, Adventure, action",
+"8,9,10",
+"8,9,10,11");
+
+-- fetch 
+SELECT * FROM MOVIES;
+GO 
+
+--TABLE 2: REVIEWS
+-- create
+CREATE TABLE REVIEWS (
+  reviewID int primary key,
+  movieID int,
+  reviewer varchar(100),
+  review text,
+);
+-- insert
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0001, 0001, 'Bharadwaj Rangan',
+"Epic Masterpiece - beautiful performances");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0002, 0001, 'Gopi',
+"Visually stunning- world of Cholas");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0003, 0001, 'Rick & Kevin',
+"Marvelous musical");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0004, 0002, 'Bharadwaj Rangan',
+"Unforgettable- beautiful performances");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0005, 0002, 'Gopi',
+"Mani Ratnam's Magnum Opus");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0006, 0002, 'Rick & Kevin',
+"A perfect Ending");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0007, 0002, 'Filmfare',
+"Once in a lifetime performance - stellar Cast");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0008, 0003, 'NY times',
+"Striking visuals");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0009, 0003, 'IMDB',
+"mind-boggling Adventure");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0010, 0003, 'Rotten Tomatoes',
+"Fresh and fun");
+
+-- fetch 
+SELECT * FROM REVIEWS;
+GO
+
+--TABLE 3: ARTISTS
+-- create
+CREATE TABLE ARTISTS (
+  artistID int primary key,
+  artist_name varchar(100),
+  movieID text,
+  skills text,
+  role text
+);
+
+-- insert
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0001, "Karthi", "0001,0002",
+"acting, dancing, fighting, dubbing", "Vandhiya Thevan");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0002, "Vikram", "0001,0002",
+"acting, dancing, fighting, dubbing", "Aditha Karikalan");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0003, "Jayam Ravi", "0001,0002",
+"acting, dancing, fighting, dubbing", "Arunmozhivarman");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0004, "Aishwarya Rai", "0001,0002",
+"acting, dancing, fighting, dubbing", "Nandhini");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0005, "Trisha", "0001,0002",
+"acting, dancing, fighting, dubbing", "Kundavai");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0006, "Aishwarya Lakshmi", "0001,0002",
+"acting, dancing, fighting, dubbing", "Poonguzhali");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0007, "SarathKumar", "0001,0002",
+"acting, dancing, fighting, dubbing", "Periya Pazhuvettarayar");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0008, "Shameikh Moore", "0003",
+"acting, dancing, fighting, dubbing", "Miles Morales");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0009, "Jake Johnson", "0003",
+"acting, dancing, fighting, dubbing", "Peter Parker");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0010, "Mahershala Ali", "0003",
+"acting, dancing, fighting, dubbing", "Uncle Aaron");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0011, "Hailee Steinfeld", "0003",
+"acting, dancing, fighting, dubbing", "Gwen Stacey");
+-- fetch 
+SELECT * FROM ARTISTS;
+GO
+
+
+--QUERIES:
+---------
+SELECT * FROM MOVIES WHERE movieID=0002 
+
+SELECT name, review from MOVIES INNER JOIN REVIEWS ON MOVIES.movieID = REVIEWS.movieID 
+WHERE REVIEWS.movieID=0001 
+
+SELECT artist_name, role from ARTISTS WHERE movieID like "%0002%"
+
+SELECT trailer from MOVIES where movieID=0003 
+
+QUERY OUTPUT: 
+movieID     name                                                                                                 poster                                                                                                                                                                                                                                                           trailer                                                                                                                                                                                                                                                          genre                                                                                                                                                                                                                                                            reviews_id                                                                                                                                                                                                                                                       artists_id                                                                                                                                                                                                                                                      
+----------- ---------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+          2 Ponniyin Selvan 2                                                                                    static.toiimg.com/thumb/msid-99807846,width-1280,resizemode-4/99807846.jpg                                                                                                                                                                                       www.youtube.com/watch?v=EnhS3matIoU                                                                                                                                                                                                                              Historical, fantasy, drama, Chola Kingdom, action, musical                                                                                                                                                                                                       4,5,6,7                                                                                                                                                                                                                                                          1,2,3,4,5,6,7                                                                                                                                                                                                                                                   
+
+(1 rows affected)
+name                                                                                                 review                                                                                                                                                                                                                                                          
+---------------------------------------------------------------------------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Ponniyin Selvan 1                                                                                    Epic Masterpiece - beautiful performances                                                                                                                                                                                                                       
+Ponniyin Selvan 1                                                                                    Visually stunning- world of Cholas                                                                                                                                                                                                                              
+Ponniyin Selvan 1                                                                                    Marvelous musical                                                                                                                                                                                                                                               
+
+(3 rows affected)
+artist_name                                                                                          role                                                                                                                                                                                                                                                            
+---------------------------------------------------------------------------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Karthi                                                                                               Vandhiya Thevan                                                                                                                                                                                                                                                 
+Vikram                                                                                               Aditha Karikalan                                                                                                                                                                                                                                                
+Jayam Ravi                                                                                           Arunmozhivarman                                                                                                                                                                                                                                                 
+Aishwarya Rai                                                                                        Nandhini                                                                                                                                                                                                                                                        
+Trisha                                                                                               Kundavai                                                                                                                                                                                                                                                        
+Aishwarya Lakshmi                                                                                    Poonguzhali                                                                                                                                                                                                                                                     
+SarathKumar                                                                                          Periya Pazhuvettarayar                                                                                                                                                                                                                                          
+
+(7 rows affected)
+trailer                                                                                                                                                                                                                                                         
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+www.youtube.com/watch?v=g4Hbz2jLxvQ                                                                                                                                                                                                                             
+
+(1 rows affected) 
+
+
+
+
+TABLE DATA:
+
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+movieID     name                                                                                                 poster                                                                                                                                                                                                                                                           trailer                                                                                                                                                                                                                                                          genre                                                                                                                                                                                                                                                            reviews_id                                                                                                                                                                                                                                                       artists_id                                                                                                                                                                                                                                                      
+----------- ---------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+          1 Ponniyin Selvan 1                                                                                    images.ottplay.com/images/ponniyin-selvan-940.jpg?impolicy=ottplay-20210210&width=600                                                                                                                                                                            www.youtube.com/watch?v=D4qAQYlgZQs                                                                                                                                                                                                                              Historical, fantasy, drama, Chola Kingdom, action, musical                                                                                                                                                                                                       1,2,3                                                                                                                                                                                                                                                            1,2,3,4,5,6,7                                                                                                                                                                                                                                                   
+          2 Ponniyin Selvan 2                                                                                    static.toiimg.com/thumb/msid-99807846,width-1280,resizemode-4/99807846.jpg                                                                                                                                                                                       www.youtube.com/watch?v=EnhS3matIoU                                                                                                                                                                                                                              Historical, fantasy, drama, Chola Kingdom, action, musical                                                                                                                                                                                                       4,5,6,7                                                                                                                                                                                                                                                          1,2,3,4,5,6,7                                                                                                                                                                                                                                                   
+          3 Into the Spider-Verse                                                                                m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_.jpg                                                                                                                                                                            www.youtube.com/watch?v=g4Hbz2jLxvQ                                                                                                                                                                                                                              Animation, fantasy, Adventure, action                                                                                                                                                                                                                            8,9,10                                                                                                                                                                                                                                                           8,9,10,11                                                                                                                                                                                                                                                       
+
+(3 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+reviewID    movieID     reviewer                                                                                             review                                                                                                                                                                                                                                                          
+----------- ----------- ---------------------------------------------------------------------------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+          1           1 Bharadwaj Rangan                                                                                     Epic Masterpiece - beautiful performances                                                                                                                                                                                                                       
+          2           1 Gopi                                                                                                 Visually stunning- world of Cholas                                                                                                                                                                                                                              
+          3           1 Rick & Kevin                                                                                         Marvelous musical                                                                                                                                                                                                                                               
+          4           2 Bharadwaj Rangan                                                                                     Unforgettable- beautiful performances                                                                                                                                                                                                                           
+          5           2 Gopi                                                                                                 Mani Ratnam's Magnum Opus                                                                                                                                                                                                                                       
+          6           2 Rick & Kevin                                                                                         A perfect Ending                                                                                                                                                                                                                                                
+          7           2 Filmfare                                                                                             Once in a lifetime performance - stellar Cast                                                                                                                                                                                                                   
+          8           3 NY times                                                                                             Striking visuals                                                                                                                                                                                                                                                
+          9           3 IMDB                                                                                                 mind-boggling Adventure                                                                                                                                                                                                                                         
+         10           3 Rotten Tomatoes                                                                                      Fresh and fun                                                                                                                                                                                                                                                   
+
+(10 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+
+(1 rows affected)
+artistID    artist_name                                                                                          movieID                                                                                                                                                                                                                                                          skills                                                                                                                                                                                                                                                           role                                                                                                                                                                                                                                                            
+----------- ---------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+          1 Karthi                                                                                               0001,0002                                                                                                                                                                                                                                                        acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Vandhiya Thevan                                                                                                                                                                                                                                                 
+          2 Vikram                                                                                               0001,0002                                                                                                                                                                                                                                                        acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Aditha Karikalan                                                                                                                                                                                                                                                
+          3 Jayam Ravi                                                                                           0001,0002                                                                                                                                                                                                                                                        acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Arunmozhivarman                                                                                                                                                                                                                                                 
+          4 Aishwarya Rai                                                                                        0001,0002                                                                                                                                                                                                                                                        acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Nandhini                                                                                                                                                                                                                                                        
+          5 Trisha                                                                                               0001,0002                                                                                                                                                                                                                                                        acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Kundavai                                                                                                                                                                                                                                                        
+          6 Aishwarya Lakshmi                                                                                    0001,0002                                                                                                                                                                                                                                                        acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Poonguzhali                                                                                                                                                                                                                                                     
+          7 SarathKumar                                                                                          0001,0002                                                                                                                                                                                                                                                        acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Periya Pazhuvettarayar                                                                                                                                                                                                                                          
+          8 Shameikh Moore                                                                                       0003                                                                                                                                                                                                                                                             acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Miles Morales                                                                                                                                                                                                                                                   
+          9 Jake Johnson                                                                                         0003                                                                                                                                                                                                                                                             acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Peter Parker                                                                                                                                                                                                                                                    
+         10 Mahershala Ali                                                                                       0003                                                                                                                                                                                                                                                             acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Uncle Aaron                                                                                                                                                                                                                                                     
+         11 Hailee Steinfeld                                                                                     0003                                                                                                                                                                                                                                                             acting, dancing, fighting, dubbing                                                                                                                                                                                                                               Gwen Stacey                                                                                                                                                                                                                                                     
+
+(11 rows affected)
+

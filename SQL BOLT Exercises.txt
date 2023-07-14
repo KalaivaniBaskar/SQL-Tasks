@@ -1,0 +1,276 @@
+Rel db 
+- stored in table 
+- rel db writing speed high
+- high data intensive 
+- sql, mysql plsql, postgresql
+
+non-rel db 
+- in doc , json etc 
+- key:value 
+- non-rel reading speed high
+- keep giving or showing mostly the same data to users
+- mongodb, cassandra, apache
+
+Ex-1:
+SELECT title FROM movies;
+SELECT director FROM movies;
+SELECT title, director FROM movies;
+SELECT title, year FROM movies;
+SELECT * FROM movies;
+
+Ex-2:
+SELECT * FROM movies where id=6;
+SELECT * FROM movies where year BETWEEN 2000 AND 2010;
+SELECT * FROM movies where year NOT BETWEEN 2000 AND 2010;
+between/notbetween is inclusive on the limits provided.
+SELECT * FROM movies ORDER BY year ASC LIMIT 5;
+
+EX-3:
+SELECT * FROM movies where title LIKE "toy%story%";
+SELECT * FROM movies where director LIKE "john lasseter";
+SELECT * FROM movies where director NOT LIKE "john lasseter";
+SELECT * FROM movies where title LIKE "WALL-%";
+SELECT * FROM movies where title LIKE "WALL-_";
+
+Ex-4:
+SELECT DISTINCT director FROM movies ORDER BY director ASC;
+SELECT * FROM movies ORDER BY year DESC LIMIT 4;
+SELECT * FROM movies ORDER BY title ASC LIMIT 5;
+SELECT * FROM movies ORDER BY title ASC LIMIT 5 OFFSET 5;
+
+Ex-5:
+-----
+SELECT * FROM north_american_cities where country like "canada";
+
+SELECT * FROM north_american_cities where country like "united states" order by latitude desc;
+
+SELECT * FROM north_american_cities where longitude < -87.629798 ORDER BY longitude ASC ;
+
+SELECT * FROM north_american_cities WHERE country ="Mexico" ORDER BY population DESC LIMIT 2; 
+
+SELECT * FROM north_american_cities WHERE country ="United States" ORDER BY population DESC LIMIT 2 OFFSET 2;
+
+Ex-6:
+-----
+
+SELECT title, domestic_sales, international_sales FROM movies INNER JOIN boxoffice ON movies.id = boxoffice.movie_id;
+
+SELECT title, domestic_sales, international_sales FROM movies INNER JOIN boxoffice ON movies.id = boxoffice.movie_id WHERE international_sales > domestic_sales;
+
+SELECT title, rating FROM movies INNER JOIN boxoffice ON movies.id = boxoffice.movie_id ORDER BY rating DESC;
+
+Ex-7
+-----
+SELECT DISTINCT building_name FROM employees INNER JOIN buildings ON employees.building = buildings.building_name ; 
+
+SELECT DISTINCT building_name, role from buildings LEFT JOIN employees ON employees.building = buildings.building_name 
+
+Ex-8
+----
+SELECT name, role from employees where building IS NULL
+
+SELECT building_name from buildings LEFT JOIN employees ON buildings.building_name = employees.building where name IS NULL
+
+Ex-9
+-----
+
+SELECT id,title,year, (domestic_sales + international_sales)/1000000 AS Total_sales FROM movies INNER JOIN boxoffice ON movies.id = boxoffice.movie_id ORDER BY Total_sales DESC;
+
+SELECT id,title, (rating)* 10 AS Rating% FROM movies INNER JOIN boxoffice ON movies.id = boxoffice.movie_id ORDER BY rating DESC; 
+
+SELECT id,title, year  FROM movies INNER JOIN boxoffice ON movies.id = boxoffice.movie_id where year%2 = 0 order by year;
+
+Ex-10:
+------
+SELECT MAX(years_employed) AS max_years FROM employees;
+
+SELECT role, AVG(years_employed) AS Avg_years_Employed FROM employees GROUP BY role;
+
+SELECT building, SUM(years_employed) AS total_years_Employed FROM employees GROUP BY building;
+
+Ex-11:
+-------
+
+SELECT role, COUNT(role) AS no_of_artists FROM employees where role LIKE "artist"; 
+
+SELECT role, COUNT(role) AS no_of_artists FROM employees group by role; 
+
+SELECT role,  SUM(years_employed) AS engg_total_yrs  FROM employees where role LIKE "engineer"; 
+
+Ex-12:
+------
+SELECT director,  COUNT(id) AS no_of_movies  FROM movies group by director;
+
+SELECT director, SUM(domestic_sales + international_sales) AS total_sales  FROM movies INNER JOIN boxoffice ON movies.id=boxoffice.movie_id GROUP BY director;
+
+
+Query order of execution
+------------------------
+1. FROM and JOINs
+The FROM clause, and subsequent JOINs are first executed to determine the total working set of data that is being queried. This includes subqueries in this clause, and can cause temporary tables to be created under the hood containing all the columns and rows of the tables being joined.
+
+2. WHERE
+Once we have the total working set of data, the first-pass WHERE constraints are applied to the individual rows, and rows that do not satisfy the constraint are discarded. Each of the constraints can only access columns directly from the tables requested in the FROM clause. Aliases in the SELECT part of the query are not accessible in most databases since they may include expressions dependent on parts of the query that have not yet executed.
+
+3. GROUP BY
+The remaining rows after the WHERE constraints are applied are then grouped based on common values in the column specified in the GROUP BY clause. As a result of the grouping, there will only be as many rows as there are unique values in that column. Implicitly, this means that you should only need to use this when you have aggregate functions in your query.
+
+4. HAVING
+If the query has a GROUP BY clause, then the constraints in the HAVING clause are then applied to the grouped rows, discard the grouped rows that don't satisfy the constraint. Like the WHERE clause, aliases are also not accessible from this step in most databases.
+
+5. SELECT
+Any expressions in the SELECT part of the query are finally computed.
+
+6. DISTINCT
+Of the remaining rows, rows with duplicate values in the column marked as DISTINCT will be discarded.
+
+7. ORDER BY
+If an order is specified by the ORDER BY clause, the rows are then sorted by the specified data in either ascending or descending order. Since all the expressions in the SELECT part of the query have been computed, you can reference aliases in this clause.
+
+8. LIMIT / OFFSET
+Finally, the rows that fall outside the range specified by the LIMIT and OFFSET are discarded, leaving the final set of rows to be returned from the query.
+
+
+INSERT INTO movies VALUES(5,"Toy Story 4", "Kavishaa", 2023, 75);
+INSERT INTO boxoffice VALUES (5,8.7,340000000, 270000000);
+
+UPDATE movies SET director = "John Lasseter" where title LIKE "a bug's life";
+UPDATE movies SET year = 1999 where title LIKE "toy story 2";
+UPDATE movies SET title="Toy Story 3", director="Lee Unkrich" where id=11;
+
+DELETE FROM movies where year < 2005;
+DELETE FROM movies where director like "andrew stanton";
+
+
+CREATE TABLE IF NOT EXISTS Database (
+    Name TEXT,
+    Version FLOAT,
+    Download_count INTEGER
+); 
+
+ALTER TABLE movies ADD Aspect_ratio FLOAT; 
+ALTER TABLE movies ADD Language TEXT DEFAULT "English";
+
+DROP TABLE IF EXISTS movies;
+DROP TABLE IF EXISTS boxoffice; 
+
+-------------------------------
+programiz online sql editor
+
+IMDB Design a DB for IMDB 1. Movie should have multiple media(Video or Image) 2. Movie can belongs to multiple Genre 3. Movie can have multiple reviews and Review can belongs to a user 4. Artist can have multiple skills 5. Artist can perform multiple role in a single film
+
+tables:
+movies - name, image, video, artist_id, review_id, genre
+
+
+-- create
+CREATE TABLE MOVIES (
+  movieID int primary key,
+  name varchar(100),
+  poster text,
+  trailer text,
+  genre text,
+  reviews_id text,
+  artists_id text
+);
+
+-- insert
+INSERT INTO MOVIES(movieID,name,poster,trailer,genre,reviews_id,artists_id) VALUES (0001, "Ponniyin Selvan 1",
+"https://images.ottplay.com/images/ponniyin-selvan-940.jpg?impolicy=ottplay-20210210&width=600",
+"https://www.youtube.com/watch?v=D4qAQYlgZQs",
+"Historical, fantasy, drama, Chola Kingdom, action, musical",
+"1,2,3",
+"1,2,3,4,5,6,7");
+INSERT INTO MOVIES(movieID,name,poster,trailer,genre,reviews_id,artists_id) VALUES (0002, "Ponniyin Selvan 2",
+"https://static.toiimg.com/thumb/msid-99807846,width-1280,resizemode-4/99807846.jpg",
+"https://www.youtube.com/watch?v=EnhS3matIoU",
+"Historical, fantasy, drama, Chola Kingdom, action, musical",
+"4,5,6,7",
+"1,2,3,4,5,6,7");
+INSERT INTO MOVIES(movieID,name,poster,trailer,genre,reviews_id,artists_id) VALUES (0003, "Into the Spider-Verse",
+"https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_.jpg",
+"https://www.youtube.com/watch?v=g4Hbz2jLxvQ",
+"Animation, fantasy, Adventure, action",
+"8,9,10",
+"8,9,10,11");
+
+-- fetch 
+SELECT * FROM MOVIES;
+GO
+
+
+artists - artist_id, name, movie_id, skills, role
+CREATE TABLE ARTISTS (
+  artistID int primary key,
+  artist_name varchar(100),
+  movieID text,
+  skills text,
+  role text
+);
+
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0001, "Karthi", "0001,0002",
+"acting, dancing, fighting, dubbing", "Vandhiya Thevan");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0002, "Vikram", "0001,0002",
+"acting, dancing, fighting, dubbing", "Aditha Karikalan");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0003, "Jayam Ravi", "0001,0002",
+"acting, dancing, fighting, dubbing", "Arunmozhivarman");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0004, "Aishwarya Rai", "0001,0002",
+"acting, dancing, fighting, dubbing", "Nandhini");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0005, "Trisha", "0001,0002",
+"acting, dancing, fighting, dubbing", "Kundavai");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0006, "Aishwarya Lakshmi", "0001,0002",
+"acting, dancing, fighting, dubbing", "Poonguzhali");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0007, "SarathKumar", "0001,0002",
+"acting, dancing, fighting, dubbing", "Periya Pazhuvettarayar");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0008, "Shameikh Moore", "0003",
+"acting, dancing, fighting, dubbing", "Miles Morales");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0009, "Jake Johnson", "0003",
+"acting, dancing, fighting, dubbing", "Peter Parker");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0010, "Mahershala Ali", "0003",
+"acting, dancing, fighting, dubbing", "Uncle Aaron");
+INSERT INTO ARTISTS(artistID,artist_name,movieID,skills,role) VALUES (0011, "Hailee Steinfeld", "0003",
+"acting, dancing, fighting, dubbing", "Gwen Stacey");
+-- fetch 
+SELECT * FROM ARTISTS;
+GO
+
+
+
+
+reviews - review_id, reviewer_name, review, movie_id
+CREATE TABLE REVIEWS (
+  reviewID int primary key,
+  movieID int,
+  reviewer varchar(100),
+  review text,
+);
+-- insert
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0001, 0001, 'Bharadwaj Rangan',
+"Epic Masterpiece - beautiful performances");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0002, 0001, 'Gopi',
+"Visually stunning- world of Cholas");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0003, 0001, 'Rick & Kevin',
+"Marvelous musical");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0004, 0002, 'Bharadwaj Rangan',
+"Unforgettable- beautiful performances");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0005, 0002, 'Gopi',
+"Mani Ratnam's Magnum Opus");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0006, 0002, 'Rick & Kevin',
+"A perfect Ending");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0007, 0002, 'Filmfare',
+"Once in a lifetime performance - stellar Cast");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0008, 0003, 'NY times',
+"Striking visuals");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0009, 0003, 'IMDB',
+"mind-boggling Adventure");
+INSERT INTO REVIEWS(reviewID,movieID,reviewer,review) VALUES (0010, 0003, 'Rotten Tomatoes',
+"Fresh and fun");
+
+
+-- fetch 
+SELECT * FROM REVIEWS;
+GO
+
+
+
+
